@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "build"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "files": [
+    "node_modules/phaser/typescript/phaser.d.ts",
+    "node_modules/phaser/typescript/pixi.d.ts",
+    "node_modules/phaser/typescript/p2.d.ts"
+  ]
+}
