@@ -5,10 +5,11 @@ module.exports = function(grunt) {
     clean: {
       main: ['build/*']
     },
+    browserify: {
+      main: compile(true),
+      release: compile(false)
+    },
     shell: {
-      runtsc: {
-        command: 'tsc -p .'
-      },
       runserver: {
         command: 'python -m SimpleHTTPServer',
         options: {
@@ -16,6 +17,15 @@ module.exports = function(grunt) {
             cwd: 'build' 
           }
         }
+      }
+    },
+    uglify: {
+      main: {
+        files: [{ 
+          expand: true,
+          src: 'build/main.js',
+          dest: 'build/main.min.js'
+        }]
       }
     },
     copy: {
@@ -28,25 +38,50 @@ module.exports = function(grunt) {
       images: {
         expand: true,
         flatten: true,
-        src: "resources/web/images/**/*",
-        dest: "build/images/"
+        src: "resources/images/**/*",
+        dest: "build/images"
       },
       phaser: {
         expand: true,
         flatten: true,
-        src: "node_modules/phaser/build/phaser.js",
+        src: "node_modules/phaser/build/phaser.min.js",
         dest: "build/"
       }
     }
   });
   
-  // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'shell:runtsc', 'copy:htm',
-                                 'copy:images','copy:phaser']);
+  grunt.registerTask('default', ['clean', 'copy:phaser', 'browserify:main',
+                                 'copy:htm', 'copy:images']);
   grunt.registerTask('server', ['shell:runserver']);
 } ;
+
+function compile(debug) {
+  return {
+    files: {
+      'build/main.js' : ['src/**/*.ts']
+    },
+    options: {
+      browserifyOptions: {
+        debug: debug,
+      },
+      plugin: [
+        [
+          'tsify', [{
+                "target": "es5",
+                "module": "commonjs",
+                "noImplicitAny": true,
+                "noImplicitReturns": true
+            }
+          ]
+        ]
+      ]
+    }
+  }
+}

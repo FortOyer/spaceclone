@@ -2,8 +2,7 @@
   "name": "spaceclone",
   "version": "0.0.1",
   "description": "Space Clones Game",
-  "main": "main.js",
-  "scripts": {
+  "main": "main.js", "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,10 +19,21 @@
   },
   "homepage": "https://github.com/FortOyer/spaceclone#readme",
   "devDependencies": {
+    "browserify-shim": "^3.8.12",
     "grunt": "^1.0.1",
+    "grunt-browserify": "^5.0.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
     "grunt-shell": "^2.0.0",
-    "phaser": "^2.6.2"
-  }
+    "phaser": "^2.6.2",
+    "tsify": "^2.0.2"
+  },
+  "browserify": {
+    "transform": "browserify-shim"
+  },
+  "browserify-shim": {
+    "phaser": "global:Phaser",
+    "pixi": "global:PIXI"
+  } 
 }
