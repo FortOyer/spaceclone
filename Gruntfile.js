@@ -14,7 +14,15 @@ module.exports = function(grunt) {
         command: 'python -m SimpleHTTPServer',
         options: {
           execOptions: {
-            cwd: 'build' 
+            cwd: 'build/bin' 
+          }
+        }
+      },
+      mergerooms: {
+        command: 'python jsonpack.py resources/rooms/ build/gen/rooms.ts',
+        options: {
+          execOptions: {
+            cwd: '.' 
           }
         }
       }
@@ -23,8 +31,8 @@ module.exports = function(grunt) {
       main: {
         files: [{ 
           expand: true,
-          src: 'build/main.js',
-          dest: 'build/main.min.js'
+          src: 'build/bin/main.js',
+          dest: 'build/bin/main.min.js'
         }]
       }
     },
@@ -33,19 +41,20 @@ module.exports = function(grunt) {
         expand: true,
         flatten: true,
         src: "resources/web/*",
-        dest: "build/"
+        dest: "build/bin/"
       },
-      images: {
+      resources: {
         expand: true,
-        flatten: true,
-        src: "resources/images/**/*",
-        dest: "build/images"
+        flatten: false,
+        cwd: "resources/",
+        src: ["images/**/*", "font/**/*"],
+        dest: "build/bin/"
       },
       phaser: {
         expand: true,
         flatten: true,
         src: "node_modules/phaser/build/phaser.min.js",
-        dest: "build/"
+        dest: "build/bin/"
       }
     }
   });
@@ -57,15 +66,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'copy:phaser', 'browserify:main',
-                                 'copy:htm', 'copy:images']);
+  grunt.registerTask('default', ['clean', 'shell:mergerooms', 'copy:phaser',
+                                 'browserify:main', 'copy:htm',
+                                 'copy:resources']);
+
   grunt.registerTask('server', ['shell:runserver']);
 } ;
 
 function compile(debug) {
   return {
     files: {
-      'build/main.js' : ['src/**/*.ts']
+      'build/bin/main.js' : ['src/**/*.ts']
     },
     options: {
       browserifyOptions: {

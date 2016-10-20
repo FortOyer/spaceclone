@@ -1,5 +1,5 @@
-import { Engine } from  "./adventure"
+import SpaceClone = require("./contents")
 
 window.onload = () => {
-    var engine = new Engine();
+    SpaceClone.execute();
 };
